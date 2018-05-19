@@ -88,6 +88,32 @@ void queue_delete(Queue* q, int target)
     }
 }
 
+int queue_insert_somewhere(Queue *q, int val, int app_val)
+{
+    int success = 1;
+    Node *cur;
+    cur = q->head->next;
+    while (cur != q->tail && cur->val != val)
+    {
+        cur = cur->next;
+    }
+    if (cur == q->tail)
+    {
+        success = 0;
+    }
+    else
+    {
+        Node* new_node = (Node*)malloc(sizeof(Node));
+        new_node->val = app_val;
+        Node* original_next = cur->next;
+        new_node->next = original_next;
+        new_node->prev = cur;
+        cur->next = new_node;
+        original_next->prev = new_node;
+    }
+
+    return success;
+}
 
 void test_queue(){
     //server as test driver
@@ -103,14 +129,8 @@ void test_queue(){
     int popval = queue_pop(myq);
     printf("pop'ed a val from myq, it is : %d\n", popval);
     queue_print(myq);
-    popval = queue_pop(myq);
-    printf("pop'ed a val from myq, it is : %d\n", popval);
-    queue_print(myq);
-    printf("delete 1 from queue:\n");
-    queue_delete(myq, 1);
-    queue_print(myq);
-    printf("delete 4 from queue:\n");
-    queue_delete(myq, 4);
+    printf("insert 666 after 3\n");
+    queue_insert_somewhere(myq, 3, 666);
     queue_print(myq);
 }
 
