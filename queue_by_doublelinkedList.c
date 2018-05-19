@@ -44,11 +44,27 @@ Queue* queue_create(){
     return q;
 }
 
+void queue_append(Queue* q, int val){
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    new_node->val = val;
+    Node* original_prev = q->tail->prev;
+    q->tail->prev = new_node;
+    original_prev->next= new_node;
+    new_node->next = q->tail;
+    new_node->prev = original_prev;
+}
+
 
 void test_queue(){
     //server as test driver
     printf("This is the test function\n");
     Queue* myq = queue_create();
+    // myq.append(1);
+    queue_append(myq, 1);
+    queue_append(myq, 2);
+    queue_append(myq, 3);
+    queue_append(myq, 4);
+    // queue_print(myq);
 }
 
 int main(int argc, char* argv[]){
