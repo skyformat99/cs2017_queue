@@ -157,8 +157,55 @@ void test_queue(){
     queue_print(myq);
 }
 
-int main(int argc, char* argv[]){
-    test_queue();
-    // queue_interaction();
+void queue_interaction()
+{
+    char command[100];
+    Queue* queue = queue_create();
+    while(scanf("%s", command))
+    {
+        if(strcmp(command, "pop") == 0){
+            int res = queue_pop(queue);
+            printf("pop'ed %d\n", res);
+        }
+        else if(strcmp(command, "print") == 0){
+            queue_print(queue);
+        }
+        else if(strcmp(command, "append") == 0){
+            int elem;
+            scanf("%d", &elem);
+            queue_append(queue, elem);
+            printf("append'ed %d\n", elem);
+        }        
+        else if(strcmp(command, "delete") == 0){
+            int elem;
+            scanf("%d", &elem);
+            queue_delete(queue, elem);
+            printf("delete'ed %d\n", elem);
+        }        
+        else if(strcmp(command, "readfile") == 0){
+            char fn[100];
+            FILE *fp;
+            scanf("%s", fn);
+            fp = fopen(fn, "r");
+            if(!fp){
+                printf("No such file\n");
+            }
+            else{
+                printf("Gonna do file read %s\n", fn);
+                readfile(queue, fn);
+            }
+        }        
+        else
+        {
+            printf("Unknow command %s\n", command);fflush(stdout);
+            strcpy(command, "");
+        }
+    }
+}
+
+int main(int argc, char* argv[])
+{
+    // test_queue();
+    queue_interaction();
     return 0;
 }
