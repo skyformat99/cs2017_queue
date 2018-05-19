@@ -68,6 +68,27 @@ int queue_pop(Queue* q)
 }
 
 
+void queue_delete(Queue* q, int target)
+{
+    //1. find target node
+    Node* cur = q->head->next;
+    while(cur != q->tail && cur->val != target){
+        cur = cur->next;
+    }
+    //2. delete target node
+    //  2.1 get orignal prev, and next
+    //  2.2 connect o'prev, o'next
+    //  2.3 free target node
+    if(cur != q->tail){
+        Node* oprev = cur->prev;
+        Node* onext = cur->next;
+        oprev->next = onext;
+        onext->prev = oprev;
+        free(cur);
+    }
+}
+
+
 void test_queue(){
     //server as test driver
     printf("This is the test function\n");
@@ -84,6 +105,12 @@ void test_queue(){
     queue_print(myq);
     popval = queue_pop(myq);
     printf("pop'ed a val from myq, it is : %d\n", popval);
+    queue_print(myq);
+    printf("delete 1 from queue:\n");
+    queue_delete(myq, 1);
+    queue_print(myq);
+    printf("delete 4 from queue:\n");
+    queue_delete(myq, 4);
     queue_print(myq);
 }
 
