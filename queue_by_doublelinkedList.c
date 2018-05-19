@@ -19,24 +19,24 @@ struct queue
 };
 typedef struct queue Queue;
 
-// void queue_print(Queue *q) //TODO 一会儿补写
-// {
-//     printf("\nqueue content: ");fflush(stdout);
-//     Node *cur = q->head->next;
-//     while (cur != q->tail)
-//     {
-//         printf("%d->", cur->val);fflush(stdout);
-//         cur = cur->next;
-//     }
-//     printf("NIL");
-//     printf("\n");fflush(stdout);
-// }
+void queue_print(Queue *q)
+{
+    Node* cur = q->head->next;
+    while(cur != q->tail)
+    {
+        printf("%d->", cur->val);
+        cur = cur->next;
+    }
+    printf("NULL\n");
+}
 
 
 Queue* queue_create(){
     Queue* q = (Queue*)malloc(sizeof(Queue));
     q->head = (Node*)malloc(sizeof(Node));
     q->tail = (Node*)malloc(sizeof(Node));
+    q->head->val = 2147483648-1;
+    q->tail->val = 2147483648-1;
     q->head->next = q->tail;
     q->tail->prev = q->head;
     q->head->prev = NULL;
@@ -64,7 +64,7 @@ void test_queue(){
     queue_append(myq, 2);
     queue_append(myq, 3);
     queue_append(myq, 4);
-    // queue_print(myq);
+    queue_print(myq);
 }
 
 int main(int argc, char* argv[]){
