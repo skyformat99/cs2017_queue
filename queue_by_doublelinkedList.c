@@ -54,6 +54,19 @@ void queue_append(Queue* q, int val){
     new_node->prev = original_prev;
 }
 
+int queue_pop(Queue* q)
+{
+    Node* ret = q->head->next;
+    int ret_val = ret->val;
+    Node* new_head_next = ret->next;
+    q->head->next = new_head_next;
+    new_head_next->prev = q->head;
+    // ret->next = NULL;
+    // ret->prev = NULL;
+    free(ret);
+    return ret_val;
+}
+
 
 void test_queue(){
     //server as test driver
@@ -64,6 +77,13 @@ void test_queue(){
     queue_append(myq, 2);
     queue_append(myq, 3);
     queue_append(myq, 4);
+    printf("the original queue is:\n");
+    queue_print(myq);
+    int popval = queue_pop(myq);
+    printf("pop'ed a val from myq, it is : %d\n", popval);
+    queue_print(myq);
+    popval = queue_pop(myq);
+    printf("pop'ed a val from myq, it is : %d\n", popval);
     queue_print(myq);
 }
 
