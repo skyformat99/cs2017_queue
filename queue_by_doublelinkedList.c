@@ -115,6 +115,26 @@ int queue_insert_somewhere(Queue *q, int val, int app_val)
     return success;
 }
 
+void readfile(Queue* q, char* filename)
+// read number from file and append them to the queue
+{
+    FILE* fp = fopen(filename, "r");
+    if(fp == NULL)
+    {
+        printf("file open on %s error!\n", filename);
+    }
+    else
+    {
+        int elem;
+        while(!feof(fp))
+        {
+            fscanf(fp, "%d", &elem);
+            queue_append(q, elem);
+        }
+    }
+    fclose(fp);
+}
+
 void test_queue(){
     //server as test driver
     printf("This is the test function\n");
@@ -131,6 +151,9 @@ void test_queue(){
     queue_print(myq);
     printf("insert 666 after 3\n");
     queue_insert_somewhere(myq, 3, 666);
+    queue_print(myq);
+    printf("readfile file1.txt\n");
+    readfile(myq, "./file1.txt");
     queue_print(myq);
 }
 
