@@ -33,9 +33,22 @@ typedef struct queue Queue;
 // }
 
 
+Queue* queue_create(){
+    Queue* q = (Queue*)malloc(sizeof(Queue));
+    q->head = (Node*)malloc(sizeof(Node));
+    q->tail = (Node*)malloc(sizeof(Node));
+    q->head->next = q->tail;
+    q->tail->prev = q->head;
+    q->head->prev = NULL;
+    q->tail->next = NULL;
+    return q;
+}
+
+
 void test_queue(){
     //server as test driver
     printf("This is the test function\n");
+    Queue* myq = queue_create();
 }
 
 int main(int argc, char* argv[]){
