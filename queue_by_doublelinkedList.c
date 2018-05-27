@@ -23,11 +23,29 @@ void queue_print(Queue *q)
 {
     Node* cur = q->head->next;
     while(cur != q->tail)
+    // while(cur != NULL)
     {
-        printf("%d->", cur->val);
+        printf("%d <-> ", cur->val);
         cur = cur->next;
     }
     printf("NULL\n");
+}
+
+void print_recursion_helper(Queue* q, Node* cur)
+{
+    if (cur == q->tail)
+    {
+        printf("NULL\n");
+        return;
+    }
+    else
+        printf("%d <=> ", cur->val);
+        print_recursion_helper(q, cur->next);
+}
+
+void queue_print_recursion(Queue* q)
+{
+    print_recursion_helper(q, q->head->next);
 }
 
 
@@ -105,6 +123,7 @@ int queue_insert_somewhere(Queue *q, int val, int app_val)
     {
         Node* new_node = (Node*)malloc(sizeof(Node));
         new_node->val = app_val;
+
         Node* original_next = cur->next;
         new_node->next = original_next;
         new_node->prev = cur;
@@ -144,17 +163,18 @@ void test_queue(){
     queue_append(myq, 2);
     queue_append(myq, 3);
     queue_append(myq, 4);
-    printf("the original queue is:\n");
+    // printf("the original queue is:\n");
     queue_print(myq);
-    int popval = queue_pop(myq);
-    printf("pop'ed a val from myq, it is : %d\n", popval);
-    queue_print(myq);
-    printf("insert 666 after 3\n");
-    queue_insert_somewhere(myq, 3, 666);
-    queue_print(myq);
-    printf("readfile file1.txt\n");
-    readfile(myq, "./file1.txt");
-    queue_print(myq);
+    queue_print_recursion(myq);
+    // int popval = queue_pop(myq);
+    // printf("pop'ed a val from myq, it is : %d\n", popval);
+    // queue_print(myq);
+    // printf("insert 666 after 3\n");
+    // queue_insert_somewhere(myq, 3, 666);
+    // queue_print(myq);
+    // printf("readfile file1.txt\n");
+    // readfile(myq, "./file1.txt");
+    // queue_print(myq);
 }
 
 void queue_interaction()
@@ -205,7 +225,7 @@ void queue_interaction()
 
 int main(int argc, char* argv[])
 {
-    // test_queue();
-    queue_interaction();
+    test_queue();
+    // queue_interaction();
     return 0;
 }
