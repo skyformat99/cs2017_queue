@@ -1,28 +1,9 @@
-#include <stdio.h>  // scanf/print/ 文件I/O
-#include <stdlib.h> // malloc
-#include <string.h>  // 操作字符串需要的库函数
-
-
-// 设计数据结构
-struct node
-{
-    int val;
-    struct node* prev;
-    struct node* next;
-};
-typedef struct node Node;
-
-struct queue
-{
-    Node* head;
-    Node* tail;
-};
-typedef struct queue Queue;
+#include "queue.h"
 
 void queue_print(Queue *q)
 {
-    Node* cur = q->head->next;
-    while(cur != q->tail)
+    Node *cur = q->head->next;
+    while (cur != q->tail)
     // while(cur != NULL)
     {
         printf("%d <-> ", cur->val);
@@ -31,7 +12,7 @@ void queue_print(Queue *q)
     printf("NULL\n");
 }
 
-void print_recursion_helper(Queue* q, Node* cur)
+void print_recursion_helper(Queue *q, Node *cur)
 {
     if (cur == q->tail)
     {
@@ -40,21 +21,21 @@ void print_recursion_helper(Queue* q, Node* cur)
     }
     else
         printf("%d <=> ", cur->val);
-        print_recursion_helper(q, cur->next);
+    print_recursion_helper(q, cur->next);
 }
 
-void queue_print_recursion(Queue* q)
+void queue_print_recursion(Queue *q)
 {
     print_recursion_helper(q, q->head->next);
 }
 
-
-Queue* queue_create(){
-    Queue* q = (Queue*)malloc(sizeof(Queue));
-    q->head = (Node*)malloc(sizeof(Node));
-    q->tail = (Node*)malloc(sizeof(Node));
-    q->head->val = 2147483648-1;
-    q->tail->val = 2147483648-1;
+Queue *queue_create()
+{
+    Queue *q = (Queue *)malloc(sizeof(Queue));
+    q->head = (Node *)malloc(sizeof(Node));
+    q->tail = (Node *)malloc(sizeof(Node));
+    q->head->val = 2147483648 - 1; // `2^31 - 1`
+    q->tail->val = 2147483648 - 1;
     q->head->next = q->tail;
     q->tail->prev = q->head;
     q->head->prev = NULL;
@@ -62,21 +43,22 @@ Queue* queue_create(){
     return q;
 }
 
-void queue_append(Queue* q, int val){
-    Node* new_node = (Node*)malloc(sizeof(Node));
+void queue_append(Queue *q, int val)
+{
+    Node *new_node = (Node *)malloc(sizeof(Node));
     new_node->val = val;
-    Node* original_prev = q->tail->prev;
+    Node *original_prev = q->tail->prev;
     q->tail->prev = new_node;
-    original_prev->next= new_node;
+    original_prev->next = new_node;
     new_node->next = q->tail;
     new_node->prev = original_prev;
 }
 
-int queue_pop(Queue* q)
+int queue_pop(Queue *q)
 {
-    Node* ret = q->head->next;
+    Node *ret = q->head->next;
     int ret_val = ret->val;
-    Node* new_head_next = ret->next;
+    Node *new_head_next = ret->next;
     q->head->next = new_head_next;
     new_head_next->prev = q->head;
     // ret->next = NULL;
@@ -85,21 +67,22 @@ int queue_pop(Queue* q)
     return ret_val;
 }
 
-
-void queue_delete(Queue* q, int target)
+void queue_delete(Queue *q, int target)
 {
     //1. find target node
-    Node* cur = q->head->next;
-    while(cur != q->tail && cur->val != target){
+    Node *cur = q->head->next;
+    while (cur != q->tail && cur->val != target)
+    {
         cur = cur->next;
     }
     //2. delete target node
     //  2.1 get orignal prev, and next
     //  2.2 connect o'prev, o'next
     //  2.3 free target node
-    if(cur != q->tail){
-        Node* oprev = cur->prev;
-        Node* onext = cur->next;
+    if (cur != q->tail)
+    {
+        Node *oprev = cur->prev;
+        Node *onext = cur->next;
         oprev->next = onext;
         onext->prev = oprev;
         free(cur);
@@ -121,10 +104,10 @@ int queue_insert_somewhere(Queue *q, int val, int app_val)
     }
     else
     {
-        Node* new_node = (Node*)malloc(sizeof(Node));
+        Node *new_node = (Node *)malloc(sizeof(Node));
         new_node->val = app_val;
 
-        Node* original_next = cur->next;
+        Node *original_next = cur->next;
         new_node->next = original_next;
         new_node->prev = cur;
         cur->next = new_node;
@@ -134,18 +117,18 @@ int queue_insert_somewhere(Queue *q, int val, int app_val)
     return success;
 }
 
-void readfile(Queue* q, char* filename)
+void readfile(Queue *q, char *filename)
 // read number from file and append them to the queue
 {
-    FILE* fp = fopen(filename, "r");
-    if(fp == NULL)
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL)
     {
         printf("file open on %s error!\n", filename);
     }
     else
     {
         int elem;
-        while(!feof(fp))
+        while (!feof(fp))
         {
             fscanf(fp, "%d", &elem);
             queue_append(q, elem);
@@ -154,18 +137,18 @@ void readfile(Queue* q, char* filename)
     fclose(fp);
 }
 
-void test_queue(){
+void test_queue()
+{
     //server as test driver
     printf("This is the test function\n");
-    Queue* myq = queue_create();
+    Queue *myq = queue_create();
     // myq.append(1);
     queue_append(myq, 1);
     queue_append(myq, 2);
     queue_append(myq, 3);
-    queue_append(myq, 4);
     // printf("the original queue is:\n");
     queue_print(myq);
-    queue_print_recursion(myq);
+    // queue_print_recursion(myq);
     // int popval = queue_pop(myq);
     // printf("pop'ed a val from myq, it is : %d\n", popval);
     // queue_print(myq);
@@ -180,52 +163,53 @@ void test_queue(){
 void queue_interaction()
 {
     char command[100];
-    Queue* queue = queue_create();
-    while(scanf("%s", command))
+    Queue *queue = queue_create();
+    while (scanf("%s", command))
     {
-        if(strcmp(command, "pop") == 0){
+        if (strcmp(command, "pop") == 0)
+        {
             int res = queue_pop(queue);
             printf("pop'ed %d\n", res);
         }
-        else if(strcmp(command, "print") == 0){
+        else if (strcmp(command, "print") == 0)
+        {
             queue_print(queue);
         }
-        else if(strcmp(command, "append") == 0){
+        else if (strcmp(command, "append") == 0)
+        {
             int elem;
             scanf("%d", &elem);
             queue_append(queue, elem);
             printf("append'ed %d\n", elem);
-        }        
-        else if(strcmp(command, "delete") == 0){
+        }
+        else if (strcmp(command, "delete") == 0)
+        {
             int elem;
             scanf("%d", &elem);
             queue_delete(queue, elem);
             printf("delete'ed %d\n", elem);
-        }        
-        else if(strcmp(command, "readfile") == 0){
+        }
+        else if (strcmp(command, "readfile") == 0)
+        {
             char fn[100];
             FILE *fp;
             scanf("%s", fn);
             fp = fopen(fn, "r");
-            if(!fp){
+            if (!fp)
+            {
                 printf("No such file\n");
             }
-            else{
+            else
+            {
                 printf("Gonna do file read %s\n", fn);
                 readfile(queue, fn);
             }
-        }        
+        }
         else
         {
-            printf("Unknow command %s\n", command);fflush(stdout);
+            printf("Unknow command %s\n", command);
+            fflush(stdout);
             strcpy(command, "");
         }
     }
-}
-
-int main(int argc, char* argv[])
-{
-    test_queue();
-    // queue_interaction();
-    return 0;
 }
